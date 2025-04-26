@@ -51,6 +51,7 @@ const testCenters = {
   "Goodmayes": {
     address: "98 Goodmayes Road",
     city: "Ilford",
+<<<<<<< Updated upstream
     county: "Essex",
     postcode: "IG3 9UZ",
     availableSlots: 9
@@ -83,6 +84,8 @@ const testCenters = {
   "Brentwood": {
     address: "89 Warley Hill",
     city: "Brentwood",
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======

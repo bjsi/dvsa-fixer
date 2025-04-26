@@ -1,5 +1,6 @@
 import twilio from 'twilio';
 
+<<<<<<< Updated upstream
 // Initialize Twilio client
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
@@ -7,6 +8,14 @@ const twilioPhone = process.env.TWILIO_PHONE_NUMBER;
 
 // Only initialize Twilio client if credentials are available
 const client = accountSid && authToken ? twilio(accountSid, authToken) : null;
+=======
+// Initialize Twilio client with test credentials
+const accountSid = process.env.TWILIO_ACCOUNT_SID || 'AC1234567890abcdef1234567890abcdef';
+const authToken = process.env.TWILIO_AUTH_TOKEN || '1234567890abcdef1234567890abcdef';
+const twilioPhone = process.env.TWILIO_PHONE_NUMBER || '+15005550006'; // Twilio's test phone number
+
+const client = twilio(accountSid, authToken);
+>>>>>>> Stashed changes
 
 // Store verification codes (in production, use a proper database)
 const verificationCodes = new Map<string, { code: string; timestamp: number }>();
@@ -29,6 +38,7 @@ export const sendVerificationSMS = async (phoneNumber: string): Promise<boolean>
     console.log(`[TEST MODE] Verification code for ${phoneNumber}: ${verificationCode}`);
 
     // In production, uncomment this to actually send SMS
+<<<<<<< Updated upstream
     // if (client && twilioPhone) {
     //   await client.messages.create({
     //     body: `Your verification code is: ${verificationCode}`,
@@ -36,6 +46,13 @@ export const sendVerificationSMS = async (phoneNumber: string): Promise<boolean>
     //     from: twilioPhone
     //   });
     // }
+=======
+    // await client.messages.create({
+    //   body: `Your verification code is: ${verificationCode}`,
+    //   to: phoneNumber,
+    //   from: twilioPhone
+    // });
+>>>>>>> Stashed changes
 
     return true;
   } catch (error) {
