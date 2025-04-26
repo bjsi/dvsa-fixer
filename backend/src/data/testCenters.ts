@@ -70,6 +70,34 @@ export const testCenters: { [key: string]: TestCenter } = {
     postcode: "SE13 6JD",
     availableSlots: 0
   },
+  "Bradford (Thornbury)": {
+    address: "The Courtyard, Midpoint",
+    city: "Bradford",
+    county: "West Yorkshire",
+    postcode: "BD3 7AY",
+    availableSlots: 4
+  },
+  "Bradford (Heaton)": {
+    address: "15 Farfield Street",
+    city: "Bradford",
+    county: "West Yorkshire",
+    postcode: "BD09 5AS",
+    availableSlots: 3
+  },
+  "Brecon": {
+    address: "Camden Road",
+    city: "Brecon",
+    county: "Powys",
+    postcode: "LD3 7RY",
+    availableSlots: 2
+  },
+  "Brentwood": {
+    address: "89 Warley Hill",
+    city: "Brentwood",
+    county: "Essex",
+    postcode: "CM14 5JD",
+    availableSlots: 5
+  },
   "Morden": {
     address: "10 Tudor Drive",
     city: "Morden",

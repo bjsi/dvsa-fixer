@@ -51,11 +51,6 @@ const testCenters = {
   "Goodmayes": {
     address: "98 Goodmayes Road",
     city: "Ilford",
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
     county: "Essex",
     postcode: "IG3 9UZ",
     availableSlots: 9
