@@ -51,6 +51,7 @@ const testCenters = {
   "Goodmayes": {
     address: "98 Goodmayes Road",
     city: "Ilford",
+<<<<<<< Updated upstream
     county: "Essex",
     postcode: "IG3 9UZ",
     availableSlots: 9
@@ -83,14 +84,32 @@ const testCenters = {
   "Brentwood": {
     address: "89 Warley Hill",
     city: "Brentwood",
+=======
+>>>>>>> Stashed changes
     county: "Essex",
-    postcode: "CM14 5JN"
+    postcode: "IG3 9UZ",
+    availableSlots: 9
   },
-  "Bridgend": {
-    address: "Crown Buildings, Angel Street",
-    city: "Bridgend",
-    county: "Mid Glamorgan",
-    postcode: "CF31 4AD"
+  "Hither Green": {
+    address: "42-44 Ennersdale Road",
+    city: "London",
+    county: "London",
+    postcode: "SE13 6JD",
+    availableSlots: 0
+  },
+  "Morden": {
+    address: "10 Tudor Drive",
+    city: "Morden",
+    county: "Surrey",
+    postcode: "SM4 4PE",
+    availableSlots: 8
+  },
+  "West Wickham": {
+    address: "56 Glebe Way",
+    city: "West Wickham",
+    county: "Kent",
+    postcode: "BR4 0RL",
+    availableSlots: 6
   }
 };
 // Export the object for use in other files
