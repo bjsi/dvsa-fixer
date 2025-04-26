@@ -1,5 +1,17 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 
+// Flow steps
+type VerificationStep = 'LICENSE' | 'FACE' | 'VERIFYING' | 'COMPLETE' | 'ERROR';
+
+// Progress steps
+const PROGRESS_STEPS = [
+  { key: 'LICENSE', label: 'Scan License', icon: '🪪' },
+  { key: 'FACE', label: 'Scan Face', icon: '👤' },
+  { key: 'VERIFYING', label: 'Verify', icon: '✓' },
+  { key: 'BOOK', label: 'Book', icon: '📅' },
+  { key: 'PAY', label: 'Pay', icon: '��' }
+] as const;
+
 // Track OpenCV loading globally
 const OPENCV_LOADING = {
   promise: null as Promise<void> | null,
@@ -97,8 +109,77 @@ declare global {
 const ID_ASPECT = 1.585;          // ISO/IEC 7810 ID‑1 aspect (credit‑card)
 const TOL = 0.15;                 // ±15 % aspect tolerance
 const MIN_AREA = 8_000;           // px² – ignore tiny quads
-const LOCK_FRAMES = 7;            // steady frames needed before reporting OK
+const LOCK_FRAMES = 10;            // 5 seconds at 10 FPS
 const FPS = 10;                   // target frames per second for detection
+
+interface VerificationState {
+  step: VerificationStep;
+  licenseImage: string | null;
+  faceImage: string | null;
+  error: string | null;
+}
+
+function ProgressTracker({ currentStep }: { currentStep: VerificationStep }) {
+  // Map verification steps to progress index
+  const currentIndex = PROGRESS_STEPS.findIndex(step => step.key === currentStep);
+  
+  return (
+    <div className="w-full max-w-3xl mx-auto mb-8">
+      <div className="relative flex justify-between">
+        {/* Progress Line */}
+        <div className="absolute top-1/2 left-0 right-0 h-1 bg-gray-200 -translate-y-1/2" />
+        <div 
+          className="absolute top-1/2 left-0 h-1 bg-blue-500 -translate-y-1/2 transition-all duration-500 ease-in-out"
+          style={{ 
+            width: `${Math.max(0, (currentIndex / (PROGRESS_STEPS.length - 1)) * 100)}%`,
+          }}
+        />
+        
+        {/* Steps */}
+        {PROGRESS_STEPS.map((step, index) => {
+          const isActive = index <= currentIndex;
+          const isCurrent = step.key === currentStep;
+          
+          return (
+            <div 
+              key={step.key}
+              className="relative flex flex-col items-center group"
+            >
+              {/* Step Circle */}
+              <div 
+                className={`
+                  w-10 h-10 rounded-full flex items-center justify-center
+                  text-lg border-2 transition-all duration-500
+                  ${isActive 
+                    ? 'border-blue-500 bg-blue-500 text-white' 
+                    : 'border-gray-300 bg-white text-gray-400'
+                  }
+                  ${isCurrent 
+                    ? 'ring-4 ring-blue-100 scale-110' 
+                    : ''
+                  }
+                `}
+              >
+                {step.icon}
+              </div>
+              
+              {/* Step Label */}
+              <div 
+                className={`
+                  absolute top-12 text-sm font-medium whitespace-nowrap
+                  transition-all duration-500
+                  ${isActive ? 'text-blue-600' : 'text-gray-400'}
+                `}
+              >
+                {step.label}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
 export default function WebcamView() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -112,6 +193,97 @@ export default function WebcamView() {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const [videoDimensions, setVideoDimensions] = useState({ width: 0, height: 0 });
+  
+  // New state for verification flow
+  const [verificationState, setVerificationState] = useState<VerificationState>({
+    step: 'LICENSE',
+    licenseImage: null,
+    faceImage: null,
+    error: null
+  });
+
+  // Function to capture current frame as base64
+  const captureFrame = useCallback((): string => {
+    if (!videoRef.current) return '';
+    
+    const canvas = document.createElement('canvas');
+    canvas.width = videoRef.current.videoWidth;
+    canvas.height = videoRef.current.videoHeight;
+    const ctx = canvas.getContext('2d')!;
+    ctx.drawImage(videoRef.current, 0, 0);
+    return canvas.toDataURL('image/jpeg', 0.9);
+  }, []);
+
+  // Function to verify images with the server
+  const verifyImages = useCallback(async (faceImage: string) => {
+    try {
+      const response = await fetch('/verify', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          licenseImage: verificationState.licenseImage,
+          faceImage
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setVerificationState(prev => ({
+          ...prev,
+          step: 'COMPLETE',
+          error: null
+        }));
+      } else {
+        setVerificationState(prev => ({
+          ...prev,
+          step: 'ERROR',
+          error: data.message || 'Verification failed'
+        }));
+      }
+    } catch (err) {
+      setVerificationState(prev => ({
+        ...prev,
+        step: 'ERROR',
+        error: 'Failed to connect to verification service'
+      }));
+    }
+  }, [verificationState.licenseImage]);
+
+  // Function to handle successful license detection
+  const handleLicenseDetected = useCallback(() => {
+    const licenseImage = captureFrame();
+    setVerificationState(prev => ({
+      ...prev,
+      step: 'FACE',
+      licenseImage
+    }));
+  }, [captureFrame]);
+
+  // Function to capture face image
+  const handleFaceCapture = useCallback(() => {
+    const faceImage = captureFrame();
+    setVerificationState(prev => ({
+      ...prev,
+      step: 'VERIFYING',
+      faceImage
+    }));
+    stopWebcam();
+    verifyImages(faceImage);
+  }, [captureFrame, verifyImages]);
+
+  // Function to restart the verification process
+  const handleRestart = useCallback(() => {
+    setVerificationState({
+      step: 'LICENSE',
+      licenseImage: null,
+      faceImage: null,
+      error: null
+    });
+    startWebcam();
+  }, []);
 
   // Update canvas dimensions when video loads/changes
   const updateDimensions = useCallback(() => {
@@ -345,7 +517,6 @@ export default function WebcamView() {
     const now = performance.now();
     const frameInterval = 1000 / FPS;
     
-    // Skip frame if not enough time has passed
     if (now - lastProcessedRef.current < frameInterval) {
       requestAnimationFrame(tick);
       return;
@@ -450,6 +621,8 @@ export default function WebcamView() {
         if (lockRef.current >= LOCK_FRAMES) {
           console.log('✅ Detection complete! ID verified');
           detectionStatus = "✅ Perfect! ID captured";
+          handleLicenseDetected();
+          return;
         }
 
         setMessage(detectionStatus);
@@ -462,7 +635,7 @@ export default function WebcamView() {
     }
 
     requestAnimationFrame(tick);
-  }, []);
+  }, [handleLicenseDetected]);
 
   /* ---------- Helpers ---------- */
   function orderClockwise(pts: number[]) {
@@ -572,50 +745,115 @@ export default function WebcamView() {
     };
   }, [isStreaming, opencvReady, tick]);
 
+  // Effect to manage webcam based on verification step
+  useEffect(() => {
+    if (verificationState.step === 'LICENSE' || verificationState.step === 'FACE') {
+      startWebcam();
+    } else {
+      stopWebcam();
+    }
+  }, [verificationState.step, startWebcam, stopWebcam]);
+
   /* ---------- UI ---------- */
   return (
-    <div className="flex flex-col items-center space-y-4">
+    <div className="flex flex-col items-center space-y-4 p-4">
+      <ProgressTracker currentStep={verificationState.step} />
+      
       <div className="relative w-full max-w-md">
-        <div className="relative rounded-lg overflow-hidden" style={{ lineHeight: 0 }}>
-          <video 
-            ref={videoRef}
-            className="w-full"
-            playsInline 
-            muted 
-          />
-          <canvas 
-            ref={canvasRef} 
-            style={{
-              position: 'absolute',
-              left: '50%',
-              top: '50%',
-              transform: 'translate(-50%, -50%)',
-              width: videoDimensions.width > 0 ? `${videoDimensions.width}px` : '100%',
-              height: videoDimensions.height > 0 ? `${videoDimensions.height}px` : '100%',
-              pointerEvents: 'none'
-            }}
-            width={videoDimensions.width}
-            height={videoDimensions.height}
-          />
-        </div>
+        {verificationState.step === 'VERIFYING' ? (
+          <div className="text-center py-8">
+            <p className="text-xl font-medium mb-4">Verifying...</p>
+            <p className="text-gray-600">Please wait while we verify your identity</p>
+          </div>
+        ) : verificationState.step === 'COMPLETE' ? (
+          <div className="text-center py-8 text-green-600">
+            <p className="text-xl font-medium mb-4">✅ Verification Complete!</p>
+            <button
+              onClick={handleRestart}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg mt-4"
+            >
+              Start New Verification
+            </button>
+          </div>
+        ) : verificationState.step === 'ERROR' ? (
+          <div className="text-center py-8 text-red-600">
+            <p className="text-xl font-medium mb-4">❌ Verification Failed</p>
+            <p className="text-gray-600 mb-4">{verificationState.error}</p>
+            <button
+              onClick={handleRestart}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg"
+            >
+              Try Again
+            </button>
+          </div>
+        ) : (
+          <div className="relative rounded-lg overflow-hidden" style={{ lineHeight: 0 }}>
+            <video 
+              ref={videoRef}
+              className="w-full"
+              playsInline 
+              muted 
+            />
+            <canvas 
+              ref={canvasRef} 
+              style={{
+                position: 'absolute',
+                left: '50%',
+                top: '50%',
+                transform: 'translate(-50%, -50%)',
+                width: videoDimensions.width > 0 ? `${videoDimensions.width}px` : '100%',
+                height: videoDimensions.height > 0 ? `${videoDimensions.height}px` : '100%',
+                pointerEvents: 'none'
+              }}
+              width={videoDimensions.width}
+              height={videoDimensions.height}
+            />
+          </div>
+        )}
         <div className="mt-2 text-center">
           <p className="text-lg font-medium">
-            {error || message || "Initializing..."}
+            {verificationState.step === 'LICENSE' ? (
+              error || message || "Initializing..."
+            ) : verificationState.step === 'FACE' ? (
+              "Position your face in the frame and click Capture"
+            ) : (
+              ""
+            )}
           </p>
         </div>
       </div>
 
       <div className="flex space-x-4">
-        <button
-          onClick={isStreaming ? stopWebcam : startWebcam}
-          className={`px-4 py-2 rounded-lg text-white ${isStreaming ? "bg-red-600" : "bg-blue-600"}`}
-          disabled={!opencvReady}
-        >
-          {isStreaming ? "Stop Camera" : "Start Camera"}
-        </button>
+        {verificationState.step === 'LICENSE' ? (
+          <button
+            onClick={isStreaming ? stopWebcam : startWebcam}
+            className={`px-4 py-2 rounded-lg text-white ${isStreaming ? "bg-red-600" : "bg-blue-600"}`}
+            disabled={!opencvReady}
+          >
+            {isStreaming ? "Stop Camera" : "Start Camera"}
+          </button>
+        ) : verificationState.step === 'FACE' ? (
+          <>
+            <button
+              onClick={handleFaceCapture}
+              className="px-4 py-2 rounded-lg text-white bg-green-600"
+              disabled={!isStreaming}
+            >
+              Capture Face
+            </button>
+            <button
+              onClick={handleRestart}
+              className="px-4 py-2 rounded-lg text-white bg-gray-600"
+            >
+              Start Over
+            </button>
+          </>
+        ) : null}
       </div>
 
-      {!opencvReady && <p className="text-gray-500 text-sm">Loading computer‑vision engine…</p>}
+      {!opencvReady && verificationState.step === 'LICENSE' && (
+        <p className="text-gray-500 text-sm">Loading computer‑vision engine…</p>
+      )}
     </div>
   );
 }
