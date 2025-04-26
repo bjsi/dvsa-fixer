@@ -74,6 +74,7 @@ export const testCenters: { [key: string]: TestCenter } = {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   "Bradford (Thornbury)": {
     address: "The Courtyard, Midpoint",
     city: "Bradford",
@@ -102,6 +103,8 @@ export const testCenters: { [key: string]: TestCenter } = {
     postcode: "CM14 5JD",
     availableSlots: 5
   },
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 =======
