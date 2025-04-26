@@ -3,6 +3,7 @@ import twilio from 'twilio';
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 // Initialize Twilio client
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
@@ -15,6 +16,8 @@ const client = accountSid && authToken ? twilio(accountSid, authToken) : null;
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 // Initialize Twilio client with test credentials
 const accountSid = process.env.TWILIO_ACCOUNT_SID || 'AC1234567890abcdef1234567890abcdef';
 const authToken = process.env.TWILIO_AUTH_TOKEN || '1234567890abcdef1234567890abcdef';
@@ -23,6 +26,9 @@ const twilioPhone = process.env.TWILIO_PHONE_NUMBER || '+15005550006'; // Twilio
 const client = twilio(accountSid, authToken);
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -53,6 +59,7 @@ export const sendVerificationSMS = async (phoneNumber: string): Promise<boolean>
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     // if (client && twilioPhone) {
     //   await client.messages.create({
     //     body: `Your verification code is: ${verificationCode}`,
@@ -65,6 +72,8 @@ export const sendVerificationSMS = async (phoneNumber: string): Promise<boolean>
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
     // await client.messages.create({
     //   body: `Your verification code is: ${verificationCode}`,
     //   to: phoneNumber,
@@ -72,6 +81,9 @@ export const sendVerificationSMS = async (phoneNumber: string): Promise<boolean>
     // });
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
