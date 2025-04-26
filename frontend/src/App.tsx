@@ -1,8 +1,13 @@
+import React from 'react'
 import { useState, useEffect } from 'react'
 import './App.css'
 import WebcamView from './components/WebcamView'
+import SMSVerification from './components/SMSVerification'
+import TestCenterBooking from './components/TestCenterBooking'
+import { AuthProvider, useAuth } from './context/AuthContext'
 
-function App() {
+const AppContent: React.FC = () => {
+  const { isPhoneVerified } = useAuth()
   const [message, setMessage] = useState<string>('')
 
   useEffect(() => {
@@ -14,15 +19,30 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Webcam App</h1>
+      <h1>DVSA Fixer</h1>
       
-      <div className="card" style={{ maxWidth: '800px', margin: '0 auto' }}>
-        <WebcamView />
-        <p style={{ marginTop: '1rem' }}>
-          Backend status: {message || 'Loading...'}
-        </p>
-      </div>
+      {!isPhoneVerified ? (
+        <SMSVerification />
+      ) : (
+        <>
+          <TestCenterBooking />
+          <div className="card" style={{ maxWidth: '800px', margin: '0 auto' }}>
+            <WebcamView />
+            <p style={{ marginTop: '1rem' }}>
+              Backend status: {message || 'Loading...'}
+            </p>
+          </div>
+        </>
+      )}
     </div>
+  )
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   )
 }
 

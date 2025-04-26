@@ -1,4 +1,12 @@
-const testCenters = {
+export interface TestCenter {
+  address: string;
+  city: string;
+  county: string;
+  postcode: string;
+  availableSlots: number;
+}
+
+export const testCenters: { [key: string]: TestCenter } = {
   "Barking": {
     address: "84 Tanner Street",
     city: "Barking",
@@ -62,36 +70,18 @@ const testCenters = {
     postcode: "SE13 6JD",
     availableSlots: 0
   },
-  "Bradford (Thornbury)": {
-    address: "The Courtyard, Midpoint",
-    city: "Bradford",
-    county: "West Yorkshire",
-    postcode: "BD3 7AY"
+  "Morden": {
+    address: "10 Tudor Drive",
+    city: "Morden",
+    county: "Surrey",
+    postcode: "SM4 4PE",
+    availableSlots: 8
   },
-  "Bradford (Heaton)": {
-    address: "15 Farfield Street",
-    city: "Bradford",
-    county: "West Yorkshire",
-    postcode: "BD09 5AS"
-  },
-  "Brecon": {
-    address: "Camden Road",
-    city: "Brecon",
-    county: "Powys",
-    postcode: "LD3 7RY"
-  },
-  "Brentwood": {
-    address: "89 Warley Hill",
-    city: "Brentwood",
-    county: "Essex",
-    postcode: "CM14 5JN"
-  },
-  "Bridgend": {
-    address: "Crown Buildings, Angel Street",
-    city: "Bridgend",
-    county: "Mid Glamorgan",
-    postcode: "CF31 4AD"
+  "West Wickham": {
+    address: "56 Glebe Way",
+    city: "West Wickham",
+    county: "Kent",
+    postcode: "BR4 0RL",
+    availableSlots: 6
   }
-};
-// Export the object for use in other files
-module.exports = testCenters;
+}; 
