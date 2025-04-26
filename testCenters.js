@@ -105,13 +105,15 @@ const testCenters = {
     address: "84 Tanner Street",
     city: "Barking",
     county: "Essex",
-    postcode: "IG11 8QF"
+    postcode: "IG11 8QF",
+    availableSlots: 6
   },
   "Barnet": {
-    address: "Raydean House 15/17 Western Parade",
+    address: "Raydean House, 15 Western Parade",
     city: "Barnet",
     county: "Middlesex",
-    postcode: "EN5 1AD"
+    postcode: "EN5 1AH",
+    availableSlots: 4
   },
   "Barnsley": {
     address: "West Road",
@@ -159,7 +161,8 @@ const testCenters = {
     address: "33 Woolwich Road",
     city: "Belvedere",
     county: "Kent",
-    postcode: "DA17 5EE"
+    postcode: "DA17 5EE",
+    availableSlots: 2
   },
   "Bettyhill": {
     address: "C/O Bettyhill Post Office",
@@ -273,25 +276,29 @@ const testCenters = {
     address: "The Courtyard, Midpoint",
     city: "Bradford",
     county: "West Yorkshire",
-    postcode: "BD3 7AY"
+    postcode: "BD3 7AY",
+    availableSlots: 4
   },
   "Bradford (Heaton)": {
     address: "15 Farfield Street",
     city: "Bradford",
     county: "West Yorkshire",
-    postcode: "BD09 5AS"
+    postcode: "BD09 5AS",
+    availableSlots: 3
   },
   "Brecon": {
     address: "Camden Road",
     city: "Brecon",
     county: "Powys",
-    postcode: "LD3 7RY"
+    postcode: "LD3 7RY",
+    availableSlots: 2
   },
   "Brentwood": {
     address: "89 Warley Hill",
     city: "Brentwood",
     county: "Essex",
-    postcode: "CM14 5JN"
+    postcode: "CM14 5JD",
+    availableSlots: 5
   },
   "Bridgend": {
     address: "Crown Buildings, Angel Street",
@@ -488,8 +495,9 @@ const testCenters = {
   "Chingford": {
     address: "Doric House, 128 Station Road",
     city: "Chingford",
-    county: "Essex",
-    postcode: "E4 6AD"
+    county: "Greater London",
+    postcode: "E4 6AD",
+    availableSlots: 1
   },
   "Chippenham": {
     address: "Unit 11 Cavalier Court, Bumpers Farm",
@@ -549,7 +557,8 @@ const testCenters = {
     address: "111 Canterbury Road",
     city: "Croydon",
     county: "Surrey",
-    postcode: "CR0 3HH"
+    postcode: "CR0 3HH",
+    availableSlots: 3
   },
   "Cumnock": {
     address: "The Town Hall, Hall Terrace",
@@ -654,10 +663,11 @@ const testCenters = {
     postcode: "EN3 7NJ"
   },
   "Enfield MPTC": {
-    address: "Solar Way, Innova Park Business Centre",
+    address: "Solar Way",
     city: "Enfield",
     county: "Middlesex",
-    postcode: "EN3 7XY"
+    postcode: "EN3 7XY",
+    availableSlots: 5
   },
   "Erith MPTC": {
     address: "Crabtree, Manorway North",
@@ -783,7 +793,8 @@ const testCenters = {
     address: "98 Goodmayes Road",
     city: "Ilford",
     county: "Essex",
-    postcode: "IG3 9UZ"
+    postcode: "IG3 9UZ",
+    availableSlots: 9
   },
   "Grantham (Somerby)": {
     address: "Spitalgate Airfield, Blue Harbour",
@@ -924,10 +935,11 @@ const testCenters = {
     postcode: "LE10 2TG"
   },
   "Hither Green": {
-    address: "Ennersdale Road",
+    address: "42-44 Ennersdale Road",
     city: "London",
-    county: "Greater London",
-    postcode: "SE13 6JD"
+    county: "London",
+    postcode: "SE13 6JD",
+    availableSlots: 0
   },
   "Hornchurch": {
     address: "75 Station Lane",
@@ -1251,7 +1263,8 @@ const testCenters = {
     address: "10 Tudor Drive",
     city: "Morden",
     county: "Surrey",
-    postcode: "SM4 4PE"
+    postcode: "SM4 4PE",
+    availableSlots: 8
   },
   "Nelson": {
     address: "Cobden Street",
@@ -1498,6 +1511,13 @@ const testCenters = {
     city: "Salisbury",
     county: "Wiltshire",
     postcode: "SP1 1LY"
+  },
+  "West Wickham": {
+    address: "56 Glebe Way",
+    city: "West Wickham",
+    county: "Kent",
+    postcode: "BR4 0RL",
+    availableSlots: 6
   }
 };
 
