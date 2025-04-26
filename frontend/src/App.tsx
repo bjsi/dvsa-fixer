@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react'
 import './App.css'
 import WebcamView from './components/WebcamView'
 import SMSVerification from './components/SMSVerification'
-import TestCenterBooking from './components/TestCenterBooking'
 import { AuthProvider, useAuth } from './context/AuthContext'
 
 const AppContent: React.FC = () => {
@@ -24,21 +23,18 @@ const AppContent: React.FC = () => {
       {!isPhoneVerified ? (
         <SMSVerification />
       ) : (
-        <>
-          <TestCenterBooking />
-          <div className="card" style={{ maxWidth: '800px', margin: '0 auto' }}>
-            <WebcamView />
-            <p style={{ marginTop: '1rem' }}>
-              Backend status: {message || 'Loading...'}
-            </p>
-          </div>
-        </>
+        <div className="card" style={{ maxWidth: '800px', margin: '0 auto' }}>
+          <WebcamView />
+          <p style={{ marginTop: '1rem' }}>
+            Backend status: {message || 'Loading...'}
+          </p>
+        </div>
       )}
     </div>
   )
 }
 
-function App() {
+const App: React.FC = () => {
   return (
     <AuthProvider>
       <AppContent />
