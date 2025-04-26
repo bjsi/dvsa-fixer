@@ -1,4 +1,12 @@
-const testCenters = {
+export interface TestCenter {
+  address: string;
+  city: string;
+  county: string;
+  postcode: string;
+  availableSlots: number;
+}
+
+export const testCenters: { [key: string]: TestCenter } = {
   "Barking": {
     address: "84 Tanner Street",
     city: "Barking",
@@ -62,6 +70,11 @@ const testCenters = {
     postcode: "SE13 6JD",
     availableSlots: 0
   },
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
   "Bradford (Thornbury)": {
     address: "The Courtyard, Midpoint",
     city: "Bradford",
@@ -90,6 +103,16 @@ const testCenters = {
     postcode: "CM14 5JD",
     availableSlots: 5
   },
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
   "Morden": {
     address: "10 Tudor Drive",
     city: "Morden",
@@ -104,7 +127,4 @@ const testCenters = {
     postcode: "BR4 0RL",
     availableSlots: 6
   }
-};
-
-// Export the object for use in other files
-module.exports = testCenters;
+}; 

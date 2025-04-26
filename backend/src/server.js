@@ -1,12 +1,11 @@
-import express from 'express';
-import cors from 'cors';
-import smsRoutes from './routes/smsRoutes';
-import testCenterRoutes from './routes/testCenterRoutes';
+const express = require('express');
+const cors = require('cors');
+const smsRoutes = require('./routes/smsRoutes');
+const testCenterRoutes = require('./routes/testCenterRoutes');
 
 const app = express();
 const port = process.env.PORT || 4545;
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 

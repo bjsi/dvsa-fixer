@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 
 // Flow steps
-type VerificationStep = 'LICENSE' | 'FACE' | 'VERIFYING' | 'COMPLETE' | 'ERROR';
+type VerificationStep = 'LICENSE' | 'FACE' | 'VERIFYING' | 'BOOK' | 'PAY' | 'COMPLETE' | 'ERROR';
 
 // Progress steps
 const PROGRESS_STEPS = [
@@ -233,7 +233,7 @@ export default function WebcamView() {
       if (data.success) {
         setVerificationState(prev => ({
           ...prev,
-          step: 'COMPLETE',
+          step: 'BOOK',
           error: null
         }));
       } else {
@@ -765,14 +765,36 @@ export default function WebcamView() {
             <p className="text-xl font-medium mb-4">Verifying...</p>
             <p className="text-gray-600">Please wait while we verify your identity</p>
           </div>
+        ) : verificationState.step === 'BOOK' ? (
+          <div className="text-center py-8">
+            <p className="text-xl font-medium mb-4">Book Your Test</p>
+            <p className="text-gray-600 mb-4">Identity verified! Choose your test date and location.</p>
+            <button
+              onClick={() => setVerificationState(prev => ({ ...prev, step: 'PAY' }))}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg"
+            >
+              Continue to Payment
+            </button>
+          </div>
+        ) : verificationState.step === 'PAY' ? (
+          <div className="text-center py-8">
+            <p className="text-xl font-medium mb-4">Payment</p>
+            <p className="text-gray-600 mb-4">Complete your booking by making the payment.</p>
+            <button
+              onClick={() => setVerificationState(prev => ({ ...prev, step: 'COMPLETE' }))}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg"
+            >
+              Pay Now
+            </button>
+          </div>
         ) : verificationState.step === 'COMPLETE' ? (
           <div className="text-center py-8 text-green-600">
-            <p className="text-xl font-medium mb-4">✅ Verification Complete!</p>
+            <p className="text-xl font-medium mb-4">✅ Booking Complete!</p>
             <button
               onClick={handleRestart}
               className="px-4 py-2 bg-blue-600 text-white rounded-lg mt-4"
             >
-              Start New Verification
+              Start New Booking
             </button>
           </div>
         ) : verificationState.step === 'ERROR' ? (
